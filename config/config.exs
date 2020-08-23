@@ -26,12 +26,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Pow auth config
-config :organize_me, :pow,
-  user: OrganizeMe.Users.User,
-  repo: OrganizeMe.Repo,
-  web_module: OrganizeMeWeb
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

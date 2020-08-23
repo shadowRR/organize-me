@@ -17,7 +17,7 @@ defmodule OrganizeMe.Repo.Migrations.CreateTodosCategories do
       add :assign_on, :date
       add :due_date, :date
       add :finished, :boolean, default: false
-      add :category, references(:todos_categories, on_delete: :delete), null: false
+      add :category, references(:todos_categories, on_delete: :delete_all), null: false
 
       timestamps()
     end
