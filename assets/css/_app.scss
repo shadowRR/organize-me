@@ -1,0 +1,70 @@
+@import "../node_modules/nprogress/nprogress.css";
+
+#app {
+  display: flex;
+  overflow: hidden;
+
+  main {
+    height: 100vh;
+    width: calc(100vw - 50px);
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: "todos monday tuesday wednesday thursday friday saturday"
+                         "todos monday tuesday wednesday thursday friday sunday";
+
+    & > div {
+      padding: $layout-spacing;
+
+      h4 {
+        font-size: $font-size-sm;
+        text-transform: uppercase;
+      }
+    }
+
+    & > .todos {
+      grid-area: todos;
+      background: $secondary-color;
+    }
+
+    & > .monday {
+      grid-area: monday;
+      border-right: $border-width solid $border-color; 
+    }
+
+    & > .tuesday {
+      grid-area: tuesday;
+      border-right: $border-width solid $border-color; 
+    }
+
+    & > .wednesday {
+      grid-area: wednesday;
+      border-right: $border-width solid $border-color; 
+    }
+
+    & > .thursday {
+      grid-area: thursday;
+      border-right: $border-width solid $border-color; 
+    }
+
+    & > .friday {
+      grid-area: friday;
+      border-right: $border-width solid $border-color; 
+    }
+
+    & > .saturday {
+      grid-area: saturday;
+      border-bottom: $border-width solid $border-color;
+    }
+
+    & > .sunday {
+      grid-area: sunday;
+    }
+  }
+
+  aside {
+    width: 50px;
+    height: 100vh;
+    background: $primary-color;
+  }
+}
