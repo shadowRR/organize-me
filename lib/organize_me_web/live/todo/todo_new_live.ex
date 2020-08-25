@@ -27,6 +27,16 @@ defmodule OrganizeMeWeb.TodoNewLive do
                 <%= textarea f, :description, [class: "form-input"] %>
                 <%= error_tag f, :description %>
               </div>
+              <div class="form-group">
+                <%= label f, :category_id, "Category", [class: "form-label"] %>
+                <div class="input-group">
+                  <%= select f, :category_id, [], [class: "form-select"] %>
+                  <button class="btn btn-success input-group-btn" type="button">
+                    <i class="icon icon-plus"></i>
+                  </button>
+                </div>
+                <%= error_tag f, :category_id %>
+              </div>
             </form>
           </div>
         </div>

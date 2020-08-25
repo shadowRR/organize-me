@@ -1,51 +1,55 @@
-<div class="todos p-2">
-	<div class="columns">
-		<div class="column col-9-col-ml-auto"></div>
-		<div class="column col-3 text-right">
-			<button phx-click="open-todo-modal" class="btn btn-sm">
-				<i class="icon icon-plus"></i>
-			</button>
+<aside></aside>
+<main>
+	<div class="todos p-2">
+		<div class="columns">
+			<div class="column col-9-col-ml-auto"></div>
+			<div class="column col-3 text-right">
+				<button phx-click="open-todo-modal" class="btn btn-primary btn-sm">
+					<i class="icon icon-plus"></i>
+				</button>
+			</div>
 		</div>
+		<div class="unassigned-todos"></div>
 	</div>
-</div>
-<div class="monday p-2">
-	<h4 class="day-header">
-		Monday
-	</h4>
-</div>
-<div class="tuesday p-2">
-	<h4 class="day-header">
-		Tuesday
-	</h4>
-</div>
-<div class="wednesday p-2">
-	<h4 class="day-header">
-		Wednesday
-	</h4>
-</div>
-<div class="thursday p-2">
-	<h4 class="day-header">
-		Thursday
-	</h4>
-</div>
-<div class="friday p-2">
-	<h4 class="day-header">
-		Friday
-	</h4>
-</div>
-<div class="saturday p-2">
-	<h4 class="day-header">
-		Saturday
-	</h4>
-</div>
-<div class="sunday p-2">
-	<h4 class="day-header">
-		Sunday
-	</h4>
-</div>
+	<div class="monday p-2">
+		<h4 class="day-header">
+			Monday
+		</h4>
+	</div>
+	<div class="tuesday p-2">
+		<h4 class="day-header">
+			Tuesday
+		</h4>
+	</div>
+	<div class="wednesday p-2">
+		<h4 class="day-header">
+			Wednesday
+		</h4>
+	</div>
+	<div class="thursday p-2">
+		<h4 class="day-header">
+			Thursday
+		</h4>
+	</div>
+	<div class="friday p-2">
+		<h4 class="day-header">
+			Friday
+		</h4>
+	</div>
+	<div class="saturday p-2">
+		<h4 class="day-header">
+			Saturday
+		</h4>
+	</div>
+	<div class="sunday p-2">
+		<h4 class="day-header">
+			Sunday
+		</h4>
+	</div>
 
-<%= if @open_todo_modal do %>
-	<%= live_component @socket, TodoNewLive, [
-		id: "todo-new"
-	] %>
-<% end %>
+	<%= if @open_todo_modal do %>
+		<%= live_component @socket, TodoNewLive, [
+			id: "todo-new"
+		] %>
+	<% end %>
+</main>

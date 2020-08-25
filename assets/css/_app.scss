@@ -24,6 +24,13 @@
 		& > .todos {
 			grid-area: todos;
 			background: $secondary-color;
+			display: flex;
+			flex-direction: column;
+			border-right: $border-width solid $border-color;
+
+			.unassigned-todos {
+				flex: 1;
+			}
 		}
 
 		& > .monday {
