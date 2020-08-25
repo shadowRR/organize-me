@@ -86,6 +86,7 @@ defmodule OrganizeMeWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
+      import OrganizeMeWeb.LiveView.Helpers
       import OrganizeMeWeb.ErrorHelpers
       import OrganizeMeWeb.Gettext
       alias OrganizeMeWeb.Router.Helpers, as: Routes
