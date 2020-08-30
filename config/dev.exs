@@ -3,6 +3,7 @@ use Mix.Config
 # Configure your database
 config :organize_me, OrganizeMe.Repo,
   username: "postgres",
+  password: "password",
   database: "organizeme",
   hostname: "localhost",
   port: 5440,

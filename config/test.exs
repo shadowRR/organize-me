@@ -10,8 +10,8 @@ config :pbkdf2_elixir, :rounds, 1
 # Run `mix help test` for more information.
 config :organize_me, OrganizeMe.Repo,
   username: "postgres",
-  password: "postgres",
-  database: "organize_me_test#{System.get_env("MIX_TEST_PARTITION")}",
+  password: "password",
+  database: "organizeme-test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
