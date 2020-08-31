@@ -1,8 +1,9 @@
-defmodule OrganizeMeWeb.TodoNewLive do
+defmodule OrganizeMeWeb.TodoFormLive do
   use OrganizeMeWeb, :live_component
 
   alias OrganizeMe.Todos
   alias OrganizeMe.Todos.Todo
+  alias OrganizeMeWeb.TodoCategoryFormLive
 
   @impl true
   def render(assigns) do
@@ -16,7 +17,7 @@ defmodule OrganizeMeWeb.TodoNewLive do
         </div>
         <div class="modal-body">
           <div class="content">
-            <%= f = form_for @changeset, "#", [] %>
+            <%= f = form_for @changeset, "#", [phx_target: @myself, phx_save: "save"] %>
               <div class="form-group">
                 <%= label f, :name, "Name", [class: "form-label"] %>
                 <%= text_input f, :name, [class: "form-input"] %>
@@ -27,16 +28,23 @@ defmodule OrganizeMeWeb.TodoNewLive do
                 <%= textarea f, :description, [class: "form-input"] %>
                 <%= error_tag f, :description %>
               </div>
-              <div class="form-group">
-                <%= label f, :category_id, "Category", [class: "form-label"] %>
-                <div class="input-group">
-                  <%= select f, :category_id, [], [class: "form-select"] %>
-                  <button class="btn btn-success input-group-btn" type="button">
-                    <i class="icon icon-plus"></i>
-                  </button>
+              <%= unless @toggle_form_category do %>
+                <div class="form-group">
+                  <%= label f, :category_id, "Category", [class: "form-label"] %>
+                  <div class="input-group">
+                    <%= select f, :category_id, [], [class: "form-select"] %>
+                    <button phx-click="toggle-category" phx-target="<%= @myself %>"
+                      class="btn btn-success input-group-btn" type="button">
+                      <i class="icon icon-plus"></i>
+                    </button>
+                  </div>
+                  <%= error_tag f, :category_id %>
                 </div>
-                <%= error_tag f, :category_id %>
-              </div>
+              <% else %>
+                <%= live_component @socket, TodoCategoryFormLive, [
+                  id: "todo-category-form"
+                ] %>
+              <% end %>
             </form>
           </div>
         </div>
@@ -57,8 +65,22 @@ defmodule OrganizeMeWeb.TodoNewLive do
 
   @impl true
   def mount(socket) do
+    categories = Todos.list_todos_categories()
     changeset = Todos.change_todo(%Todo{})
-    {:ok, assign(socket, changeset: changeset)}
+    toggle_form_category = false
+
+    {:ok,
+     assign(socket,
+       categories: categories,
+       changeset: changeset,
+       toggle_form_category: toggle_form_category
+     )}
+  end
+
+  @impl true
+  def handle_event("toggle-category", _params, socket) do
+    toggle_form_category = true
+    {:noreply, assign(socket, toggle_form_category: toggle_form_category)}
   end
 
   @impl true

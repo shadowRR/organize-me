@@ -9,7 +9,19 @@
 				</button>
 			</div>
 		</div>
-		<div class="unassigned-todos"></div>
+		<%= if length(@todos_categories) == 0 do %>
+			<div class="init-todo-category">
+				<h4 class="text-gray text-center">
+					Start by creating your first
+					todos category.
+				</h4>
+				<button class="btn">
+					Click here
+				</button>
+			</div>
+		<% else %>
+			<div class="unassigned-todos"></div>
+		<% end %>
 	</div>
 	<div class="monday p-2">
 		<h4 class="day-header">
@@ -48,8 +60,9 @@
 	</div>
 
 	<%= if @open_todo_modal do %>
-		<%= live_component @socket, TodoNewLive, [
-			id: "todo-new"
+		<%= live_component @socket, TodoFormLive, [
+			id: "todo-form",
+			categories: @todos_categories
 		] %>
 	<% end %>
 </main>
