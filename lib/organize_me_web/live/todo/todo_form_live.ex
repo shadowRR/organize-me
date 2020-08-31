@@ -3,7 +3,6 @@ defmodule OrganizeMeWeb.TodoFormLive do
 
   alias OrganizeMe.Todos
   alias OrganizeMe.Todos.Todo
-  alias OrganizeMeWeb.TodoCategoryFormLive
 
   @impl true
   def render(assigns) do
@@ -28,23 +27,11 @@ defmodule OrganizeMeWeb.TodoFormLive do
                 <%= textarea f, :description, [class: "form-input"] %>
                 <%= error_tag f, :description %>
               </div>
-              <%= unless @toggle_form_category do %>
-                <div class="form-group">
-                  <%= label f, :category_id, "Category", [class: "form-label"] %>
-                  <div class="input-group">
-                    <%= select f, :category_id, [], [class: "form-select"] %>
-                    <button phx-click="toggle-category" phx-target="<%= @myself %>"
-                      class="btn btn-success input-group-btn" type="button">
-                      <i class="icon icon-plus"></i>
-                    </button>
-                  </div>
-                  <%= error_tag f, :category_id %>
-                </div>
-              <% else %>
-                <%= live_component @socket, TodoCategoryFormLive, [
-                  id: "todo-category-form"
-                ] %>
-              <% end %>
+              <div class="form-group">
+                <%= label f, :category_id, "Category", [class: "form-label"] %>
+                <%= select f, :category_id, [], [class: "form-select"] %>
+                <%= error_tag f, :category_id %>
+              </div>
             </form>
           </div>
         </div>
@@ -53,7 +40,7 @@ defmodule OrganizeMeWeb.TodoFormLive do
             <i class="icon icon-plus"></i>
             Create the todo
           </button>
-          <button phx-click="close" phx-target="<%= @myself %>" class="btn btn-error">
+          <button phx-click="close" phx-target="<%= @myself %>" class="btn btn-error" type="button">
             <i class="icon icon-cross"></i>
             Cancel
           </button>
@@ -67,20 +54,12 @@ defmodule OrganizeMeWeb.TodoFormLive do
   def mount(socket) do
     categories = Todos.list_todos_categories()
     changeset = Todos.change_todo(%Todo{})
-    toggle_form_category = false
 
     {:ok,
      assign(socket,
        categories: categories,
-       changeset: changeset,
-       toggle_form_category: toggle_form_category
+       changeset: changeset
      )}
-  end
-
-  @impl true
-  def handle_event("toggle-category", _params, socket) do
-    toggle_form_category = true
-    {:noreply, assign(socket, toggle_form_category: toggle_form_category)}
   end
 
   @impl true

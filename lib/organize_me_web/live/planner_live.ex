@@ -3,6 +3,7 @@ defmodule OrganizeMeWeb.PlannerLive do
 
   alias OrganizeMe.Todos
   alias OrganizeMeWeb.TodoFormLive
+  alias OrganizeMeWeb.TodoCategoryFormLive
 
   @impl true
   def mount(_params, session, socket) do
@@ -12,6 +13,7 @@ defmodule OrganizeMeWeb.PlannerLive do
     {:ok,
      assign(socket,
        open_todo_modal: false,
+       open_todo_categories_modal: false,
        todos_categories: todos_categories
      )}
   end
@@ -22,8 +24,18 @@ defmodule OrganizeMeWeb.PlannerLive do
   end
 
   @impl true
+  def handle_event("open-todo-categories-modal", _params, socket) do
+    {:noreply, assign(socket, open_todo_categories_modal: true)}
+  end
+
+  @impl true
   def handle_info({TodoFormLive, :close}, socket) do
     {:noreply, assign(socket, open_todo_modal: false)}
+  end
+
+  @impl true
+  def handle_info({TodoCategoryFormLive, :close}, socket) do
+    {:noreply, assign(socket, open_todo_categories_modal: false)}
   end
 
   @impl true

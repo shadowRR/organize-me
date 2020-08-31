@@ -4,9 +4,11 @@
 		<div class="columns">
 			<div class="column col-9-col-ml-auto"></div>
 			<div class="column col-3 text-right">
-				<button phx-click="open-todo-modal" class="btn btn-primary btn-sm">
-					<i class="icon icon-plus"></i>
-				</button>
+				<%= if length(@todos_categories) > 0 do %>
+					<button phx-click="open-todo-modal" class="btn btn-primary btn-sm">
+						<i class="icon icon-plus"></i>
+					</button>
+				<% end %>
 			</div>
 		</div>
 		<%= if length(@todos_categories) == 0 do %>
@@ -15,7 +17,7 @@
 					Start by creating your first
 					todos category.
 				</h4>
-				<button class="btn">
+				<button phx-click="open-todo-categories-modal" class="btn">
 					Click here
 				</button>
 			</div>
@@ -62,6 +64,13 @@
 	<%= if @open_todo_modal do %>
 		<%= live_component @socket, TodoFormLive, [
 			id: "todo-form",
+			categories: @todos_categories
+		] %>
+	<% end %>
+
+	<%= if @open_todo_categories_modal do %>
+		<%= live_component @socket, TodoCategoryFormLive, [
+			id: "todo-categories-form",
 			categories: @todos_categories
 		] %>
 	<% end %>
