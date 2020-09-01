@@ -69,8 +69,8 @@
 	<% end %>
 
 	<%= if @open_todo_categories_modal do %>
-		<%= live_component @socket, TodoCategoryFormLive, [
-			id: "todo-categories-form",
+		<%= live_component @socket, TodosCategoriesManagementLive, [
+			id: "todos-categories-management",
 			categories: @todos_categories
 		] %>
 	<% end %>

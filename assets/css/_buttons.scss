@@ -78,6 +78,10 @@
     @include button-variant($success-color);
   }
 
+  &.btn-warning {
+    @include button-variant($warning-color);
+  }
+
   &.btn-error {
     @include button-variant($error-color);
   }
