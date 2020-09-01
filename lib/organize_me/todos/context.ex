@@ -6,6 +6,8 @@ defmodule OrganizeMe.Todos do
   import Ecto.Query, warn: false
   alias OrganizeMe.Repo
 
+  alias Ecto.Changeset
+  alias OrganizeMe.Accounts.User
   alias OrganizeMe.Todos.Todo
   alias OrganizeMe.Todos.TodoCategory
 
@@ -144,9 +146,11 @@ defmodule OrganizeMe.Todos do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_todo_category(attrs \\ %{}) do
+  def create_todo_category(%User{} = user, attrs \\ %{}) do
     %TodoCategory{}
     |> TodoCategory.changeset(attrs)
+    |> Changeset.put_change(:user_id, user.id)
+    |> IO.inspect()
     |> Repo.insert()
   end
 

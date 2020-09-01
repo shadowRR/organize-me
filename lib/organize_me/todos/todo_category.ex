@@ -2,9 +2,12 @@ defmodule OrganizeMe.Todos.TodoCategory do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias OrganizeMe.Accounts.User
+
   schema "todos_categories" do
-    field :color, :string
+    belongs_to :user, User
     field :name, :string
+    field :color, :string
 
     timestamps()
   end

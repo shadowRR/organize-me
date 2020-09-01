@@ -3,6 +3,7 @@ defmodule OrganizeMeWeb.PlannerLive do
 
   alias OrganizeMe.Todos
   alias OrganizeMeWeb.TodoFormLive
+  alias OrganizeMeWeb.TodoCategoryFormLive
   alias OrganizeMeWeb.TodosCategoriesManagementLive
 
   @impl true
@@ -39,7 +40,21 @@ defmodule OrganizeMeWeb.PlannerLive do
   end
 
   @impl true
-  def handle_info({TodosCategoriesManagementLive, :todo_category_created, category}, socket) do
+  def handle_info({TodoCategoryFormLive, :todo_category_created, category}, socket) do
     {:noreply, assign(socket, todos_categories: [category] ++ socket.assigns.todos_categories)}
+  end
+
+  @impl true
+  def handle_info({TodoCategoryFormLive, :todo_category_updated, category}, socket) do
+    idx = Enum.find_index(socket.assigns.todos_categories, & &1.id == category.id)
+    todos_categories = List.replace_at(socket.assigns.todos_categories, idx, category)
+    {:noreply, assign(socket, todos_categories: todos_categories)}
+  end
+
+  @impl true
+  def handle_info({TodoCategoryFormLive, :todo_category_deleted, category}, socket) do
+    idx = Enum.find_index(socket.assigns.todos_categories, & &1.id == category.id)
+    todos_categories = List.delete_at(socket.assigns.todos_categories, idx)
+    {:noreply, assign(socket, todos_categories: todos_categories)}
   end
 end

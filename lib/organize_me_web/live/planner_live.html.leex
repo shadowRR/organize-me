@@ -64,6 +64,7 @@
 	<%= if @open_todo_modal do %>
 		<%= live_component @socket, TodoFormLive, [
 			id: "todo-form",
+			current_user: @current_user,
 			categories: @todos_categories
 		] %>
 	<% end %>
@@ -71,6 +72,7 @@
 	<%= if @open_todo_categories_modal do %>
 		<%= live_component @socket, TodosCategoriesManagementLive, [
 			id: "todos-categories-management",
+			current_user: @current_user,
 			categories: @todos_categories
 		] %>
 	<% end %>
