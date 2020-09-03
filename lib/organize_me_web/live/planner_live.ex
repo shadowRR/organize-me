@@ -8,6 +8,7 @@ defmodule OrganizeMeWeb.PlannerLive do
 
   @impl true
   def mount(_params, session, socket) do
+    todos = Todos.list_todos()
     todos_categories = Todos.list_todos_categories()
     socket = assign_defaults(session, socket)
 
@@ -15,6 +16,7 @@ defmodule OrganizeMeWeb.PlannerLive do
      assign(socket,
        open_todo_modal: false,
        open_todo_categories_modal: false,
+       todos: todos,
        todos_categories: todos_categories
      )}
   end
@@ -56,5 +58,17 @@ defmodule OrganizeMeWeb.PlannerLive do
     idx = Enum.find_index(socket.assigns.todos_categories, & &1.id == category.id)
     todos_categories = List.delete_at(socket.assigns.todos_categories, idx)
     {:noreply, assign(socket, todos_categories: todos_categories)}
+  end
+
+  @impl true
+  def handle_info({TodoFormLive, :todo_created, todo}, socket) do
+    {:noreply, assign(socket, todos: [todo] ++ socket.assigns.todos)}
+  end
+
+  @impl true
+  def handle_info({TodoFormLive, :todo_updated, todo}, socket) do
+    idx = Enum.find_index(socket.assigns.todos, & &1.id == todo.id)
+    todos = List.replace_at(socket.assigns.todos, idx, todo)
+    {:noreply, assign(socket, todos: todos)}
   end
 end

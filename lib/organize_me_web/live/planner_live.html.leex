@@ -22,7 +22,18 @@
 				</button>
 			</div>
 		<% else %>
-			<div class="unassigned-todos"></div>
+			<div class="unassigned-todos">
+				<%= for todo <- @todos do %>
+					<div class="tile tile-centered p-1">
+						<div class="tile-content">
+							<%= todo.name %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+			<button phx-click="open-todo-categories-modal" class="btn">
+				Manage todos categories
+			</button>
 		<% end %>
 	</div>
 	<div class="monday p-2">
@@ -65,7 +76,8 @@
 		<%= live_component @socket, TodoFormLive, [
 			id: "todo-form",
 			current_user: @current_user,
-			categories: @todos_categories
+			categories: @todos_categories,
+			todo: nil
 		] %>
 	<% end %>
 

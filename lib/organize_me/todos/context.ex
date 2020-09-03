@@ -52,9 +52,10 @@ defmodule OrganizeMe.Todos do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_todo(attrs \\ %{}) do
+  def create_todo(%User{} = user, attrs \\ %{}) do
     %Todo{}
     |> Todo.changeset(attrs)
+    |> Changeset.put_change(:user_id, user.id)
     |> Repo.insert()
   end
 
@@ -150,7 +151,6 @@ defmodule OrganizeMe.Todos do
     %TodoCategory{}
     |> TodoCategory.changeset(attrs)
     |> Changeset.put_change(:user_id, user.id)
-    |> IO.inspect()
     |> Repo.insert()
   end
 

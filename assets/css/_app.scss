@@ -30,6 +30,11 @@
 
 			.unassigned-todos {
 				flex: 1;
+
+				.tile {
+					background: white;
+					border: $border-width solid $border-color;
+				}
 			}
 
 			.init-todo-category {

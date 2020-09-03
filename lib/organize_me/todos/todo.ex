@@ -2,10 +2,12 @@ defmodule OrganizeMe.Todos.Todo do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias OrganizeMe.Accounts.User
   alias OrganizeMe.Todos.TodoCategory
 
   schema "todos" do
-    belongs_to :category, TodoCategory
+    belongs_to :user, User
+    belongs_to :todo_category, TodoCategory
     field :name, :string
     field :description, :string
     field :assign_on, :date
@@ -22,12 +24,12 @@ defmodule OrganizeMe.Todos.Todo do
       :description,
       :assign_on,
       :due_date,
-      :category_id
+      :todo_category_id
     ])
     |> validate_required([
       :name,
       :description,
-      :category_id
+      :todo_category_id
     ])
   end
 end
