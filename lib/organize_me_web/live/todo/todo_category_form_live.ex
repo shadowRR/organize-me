@@ -29,14 +29,14 @@ defmodule OrganizeMeWeb.TodoCategoryFormLive do
         </div>
         <div class="column col-2" style="display: flex; align-items: flex-end;">
           <%= unless is_nil(@todo_category) do %>
-            <%= submit [class: "btn btn-warning"] do %>
+            <%= submit [phx_disable_with: "...", class: "btn btn-warning", disabled: map_size(@changeset.changes) == 0] do %>
               <i class="icon icon-edit"></i>
             <% end %>
-            <button phx-click="delete" phx-target="<%= @myself %>" class="btn btn-error" type="button">
+            <button phx-click="delete" phx-target="<%= @myself %>" class="btn btn-error ml-1" type="button">
               <i class="icon icon-delete"></i>
             </button>
           <% else %>
-            <%= submit [class: "btn btn-success"] do %>
+            <%= submit [phx_disable_with: "...", class: "btn btn-success", disabled: !@changeset.valid?] do %>
               <i class="icon icon-plus"></i>
             <% end %>
           <% end %>
@@ -50,7 +50,7 @@ defmodule OrganizeMeWeb.TodoCategoryFormLive do
   def update(assigns, socket) do
     changeset =
       unless is_nil(assigns.todo_category),
-        do: Todos.change_todo_category(%TodoCategory{}, Map.from_struct(assigns.todo_category)),
+        do: Todos.change_todo_category(assigns.todo_category),
         else: Todos.change_todo_category(%TodoCategory{})
 
     {:ok,

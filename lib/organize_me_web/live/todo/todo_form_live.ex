@@ -35,9 +35,16 @@ defmodule OrganizeMeWeb.TodoFormLive do
                 ] %>
                 <%= error_tag f, :todo_category_id %>
               </div>
-              <%= submit [class: "btn btn-success"] do %>
-                <i class="icon icon-plus"></i>
-                Create the todo
+              <%= if is_nil(@todo) do %>
+                <%= submit [class: "btn btn-success"] do %>
+                  <i class="icon icon-plus"></i>
+                  Create the todo
+                <% end %>
+              <% else %>
+                <%= submit [class: "btn btn-warning"] do %>
+                  <i class="icon icon-edit"></i>
+                  Sauvegarder
+                <% end %>
               <% end %>
               <button phx-click="close" phx-target="<%= @myself %>" class="btn btn-error" type="button">
                 <i class="icon icon-cross"></i>
@@ -95,7 +102,7 @@ defmodule OrganizeMeWeb.TodoFormLive do
 
   @impl true
   def handle_event("save", %{"todo" => attrs}, %{assigns: %{todo: todo}} = socket) do
-    case Todos.create_todo(todo, attrs) do
+    case Todos.update_todo(todo, attrs) do
       {:ok, todo} ->
         send(self(), {__MODULE__, :todo_updated, todo})
         {:noreply, socket}

@@ -26,10 +26,12 @@
 			background: $secondary-color;
 			display: flex;
 			flex-direction: column;
+			max-width: 300px;
 			border-right: $border-width solid $border-color;
 
 			.unassigned-todos {
 				flex: 1;
+				padding: $layout-spacing 0;
 
 				.tile {
 					background: white;

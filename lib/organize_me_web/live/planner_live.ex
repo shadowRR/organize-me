@@ -17,8 +17,15 @@ defmodule OrganizeMeWeb.PlannerLive do
        open_todo_modal: false,
        open_todo_categories_modal: false,
        todos: todos,
-       todos_categories: todos_categories
+       todos_categories: todos_categories,
+       current_todo: nil
      )}
+  end
+
+  @impl true
+  def handle_event("open-todo-modal", %{"todo" => id}, socket) do
+    todo = Enum.find(socket.assigns.todos, & &1.id == String.to_integer(id))
+    {:noreply, assign(socket, open_todo_modal: true, current_todo: todo)}
   end
 
   @impl true
@@ -69,6 +76,10 @@ defmodule OrganizeMeWeb.PlannerLive do
   def handle_info({TodoFormLive, :todo_updated, todo}, socket) do
     idx = Enum.find_index(socket.assigns.todos, & &1.id == todo.id)
     todos = List.replace_at(socket.assigns.todos, idx, todo)
-    {:noreply, assign(socket, todos: todos)}
+    {:noreply, assign(socket, open_todo_modal: false, todos: todos)}
+  end
+
+  defp get_related_category(todo, categories) do
+    Enum.find(categories, & &1.id == todo.todo_category_id)
   end
 end

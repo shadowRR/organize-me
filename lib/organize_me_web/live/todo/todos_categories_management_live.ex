@@ -16,17 +16,22 @@ defmodule OrganizeMeWeb.TodosCategoriesManagementLive do
           <div class="modal-body">
             <div class="content">
               <%= for category <- @categories do %>
-                <%= live_component @socket, TodoCategoryFormLive, [
-                  id: "todo-category-form-update-#{category.id}",
-                  current_user: @current_user,
-                  todo_category: category
-                ] %>
+                <div class="mb-1">
+                  <%= live_component @socket, TodoCategoryFormLive, [
+                    id: "todo-category-form-update-#{category.id}",
+                    current_user: @current_user,
+                    todo_category: category
+                  ] %>
+                </div>
               <% end %>
-              <%= live_component @socket, TodoCategoryFormLive, [
-                id: "todo-category-form-create",
-                current_user: @current_user,
-                todo_category: nil
-              ] %>
+                <div class="mb-1">
+                  <%= live_component @socket, TodoCategoryFormLive, [
+                    id: "todo-category-form-create",
+                    current_user: @current_user,
+                    todo_category: nil
+                  ] %>
+                </div>
+              </div>
             </div>
           </div>
         </div>
