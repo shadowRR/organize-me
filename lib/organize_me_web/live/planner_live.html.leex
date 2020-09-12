@@ -22,7 +22,7 @@
 				</button>
 			</div>
 		<% else %>
-			<div class="unassigned-todos">
+			<div phx-hook="Draggable" class="unassigned-todos draggable">
 				<%= for todo <- @todos do %>
 					<div class="tile tile-centered p-1">
 						<div class="tile-content">
@@ -51,40 +51,47 @@
 			</button>
 		<% end %>
 	</div>
-	<div class="monday p-2">
+	<div class="day monday p-2">
 		<h4 class="day-header">
 			Monday
 		</h4>
+		<div class="draggable" data-day="monday"></div>
 	</div>
-	<div class="tuesday p-2">
+	<div class="day tuesday p-2">
 		<h4 class="day-header">
 			Tuesday
 		</h4>
+		<div class="draggable" data-day="tuesday"></div>
 	</div>
-	<div class="wednesday p-2">
+	<div class="day wednesday p-2">
 		<h4 class="day-header">
 			Wednesday
 		</h4>
+		<div class="draggable" data-day="wednesday"></div>
 	</div>
-	<div class="thursday p-2">
+	<div class="day thursday p-2">
 		<h4 class="day-header">
 			Thursday
 		</h4>
+		<div class="draggable" data-day="thursday"></div>
 	</div>
-	<div class="friday p-2">
+	<div class="day friday p-2">
 		<h4 class="day-header">
 			Friday
 		</h4>
+		<div class="draggable" data-day="friday"></div>
 	</div>
-	<div class="saturday p-2">
+	<div class="day saturday p-2">
 		<h4 class="day-header">
 			Saturday
 		</h4>
+		<div class="draggable" data-day="saturday"></div>
 	</div>
-	<div class="sunday p-2">
+	<div class="day sunday p-2">
 		<h4 class="day-header">
 			Sunday
 		</h4>
+		<div class="draggable" data-day="sunday"></div>
 	</div>
 
 	<%= if @open_todo_modal do %>

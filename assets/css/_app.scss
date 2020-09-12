@@ -8,8 +8,8 @@
 		height: 100vh;
 		width: calc(100vw - 50px);
 		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		grid-template-rows: repeat(2, 1fr);
+		grid-template-columns: repeat(7,  14.28%);
+		grid-template-rows: repeat(2, 50%);
 		grid-template-areas:
 			"todos monday tuesday wednesday thursday friday saturday"
 			"todos monday tuesday wednesday thursday friday sunday";
@@ -48,38 +48,45 @@
 			}
 		}
 
+		& > .day {
+			display: flex;
+			flex-direction: column;
+			border-right: $border-width solid $border-color;
+
+			& > .draggable {
+				flex: 1;
+			}
+		}
+
 		& > .monday {
 			grid-area: monday;
-			border-right: $border-width solid $border-color;
 		}
 
 		& > .tuesday {
 			grid-area: tuesday;
-			border-right: $border-width solid $border-color;
 		}
 
 		& > .wednesday {
 			grid-area: wednesday;
-			border-right: $border-width solid $border-color;
 		}
 
 		& > .thursday {
 			grid-area: thursday;
-			border-right: $border-width solid $border-color;
 		}
 
 		& > .friday {
 			grid-area: friday;
-			border-right: $border-width solid $border-color;
 		}
 
 		& > .saturday {
 			grid-area: saturday;
+			border-right: none;
 			border-bottom: $border-width solid $border-color;
 		}
 
 		& > .sunday {
 			grid-area: sunday;
+			border-right: none;
 		}
 	}
 

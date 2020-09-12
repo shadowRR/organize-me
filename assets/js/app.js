@@ -1,30 +1,37 @@
-// We need to import the CSS so that webpack will load it.
-// The MiniCssExtractPlugin is used to separate it out into
-// its own CSS file.
 import "../css/spectre.scss"
 
-// webpack automatically bundles all modules in your
-// entry points. Those entry points can be configured
-// in "webpack.config.js".
-//
-// Import deps with the dep name or local files with a relative path, for example:
-//
-//     import {Socket} from "phoenix"
-//     import socket from "./socket"
-//
 import "phoenix_html"
 import {Socket} from "phoenix"
 import NProgress from "nprogress"
 import {LiveSocket} from "phoenix_live_view"
+import { Sortable } from "@shopify/draggable";
+
+const Hooks = {}
+Hooks.Draggable = {
+  mounted() {
+    this.initDraggable();
+  },
+  updated() {
+    this.sortable.destroy()
+    this.initDraggable()
+  },
+  initDraggable() {
+    this.sortable = new Sortable(document.querySelectorAll(".draggable"), {
+      draggable: ".tile",
+      mirror: {
+        constrainDimensions: true
+      }
+    })
+    this.sortable.on("sortable:stop", (e) => console.log(e.data.newContainer.getAttribute("data-day")))
+  }
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks})
 
-// Show progress bar on live navigation and form submits
-window.addEventListener("phx:page-loading-start", info => NProgress.start())
-window.addEventListener("phx:page-loading-stop", info => NProgress.done())
+window.addEventListener("phx:page-loading-start", _info => NProgress.start())
+window.addEventListener("phx:page-loading-stop", _info => NProgress.done())
 
-// connect if there are any LiveViews on the page
 liveSocket.connect()
 
 // expose liveSocket on window for web console debug logs and latency simulation:
