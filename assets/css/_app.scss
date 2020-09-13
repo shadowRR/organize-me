@@ -4,39 +4,25 @@
 	display: flex;
 	overflow: hidden;
 
-	main {
+	aside {
 		height: 100vh;
-		width: calc(100vw - 50px);
-		display: grid;
-		grid-template-columns: repeat(7,  14.28%);
-		grid-template-rows: repeat(2, 50%);
-		grid-template-areas:
-			"todos monday tuesday wednesday thursday friday saturday"
-			"todos monday tuesday wednesday thursday friday sunday";
+		display: flex;
 
-		& > div {
-			h4 {
-				font-size: $font-size-sm;
-				text-transform: uppercase;
-			}
+		.sidebar {
+			width: 50px;
+			background: $primary-color;
 		}
 
 		& > .todos {
-			grid-area: todos;
-			background: $secondary-color;
+			width: 300px;
 			display: flex;
 			flex-direction: column;
-			max-width: 300px;
+			background: $secondary-color;
 			border-right: $border-width solid $border-color;
 
 			.unassigned-todos {
 				flex: 1;
 				padding: $layout-spacing 0;
-
-				.tile {
-					background: white;
-					border: $border-width solid $border-color;
-				}
 			}
 
 			.init-todo-category {
@@ -47,52 +33,82 @@
 				justify-content: center;
 			}
 		}
+	}
 
-		& > .day {
-			display: flex;
-			flex-direction: column;
-			border-right: $border-width solid $border-color;
+	main {
+		display: flex;
+		flex-direction: column;
 
-			& > .draggable {
-				flex: 1;
+		.controls {
+			height: 50px;
+		}
+
+		.week {
+			width: calc(100vw - 50px);
+			height: calc(100vh - 50px);
+			display: grid;
+			grid-template-columns: repeat(6, 14.28%);
+			grid-template-rows: repeat(2, 50%);
+			grid-template-areas:
+			"monday tuesday wednesday thursday friday saturday"
+			"monday tuesday wednesday thursday friday sunday";
+			border-top: $border-width solid $border-color;
+
+			& > div {
+				h4 {
+					font-size: $font-size-sm;
+					text-transform: uppercase;
+				}
 			}
-		}
 
-		& > .monday {
-			grid-area: monday;
-		}
+			& > .day {
+				display: flex;
+				flex-direction: column;
+				border-right: $border-width solid $border-color;
 
-		& > .tuesday {
-			grid-area: tuesday;
-		}
+				& > .draggable {
+					flex: 1;
+				}
+			}
 
-		& > .wednesday {
-			grid-area: wednesday;
-		}
+			& > .monday {
+				grid-area: monday;
+			}
 
-		& > .thursday {
-			grid-area: thursday;
-		}
+			& > .tuesday {
+				grid-area: tuesday;
+			}
 
-		& > .friday {
-			grid-area: friday;
-		}
+			& > .wednesday {
+				grid-area: wednesday;
+			}
 
-		& > .saturday {
-			grid-area: saturday;
-			border-right: none;
-			border-bottom: $border-width solid $border-color;
-		}
+			& > .thursday {
+				grid-area: thursday;
+			}
 
-		& > .sunday {
-			grid-area: sunday;
-			border-right: none;
+			& > .friday {
+				grid-area: friday;
+			}
+
+			& > .saturday {
+				grid-area: saturday;
+				border-right: none;
+				border-bottom: $border-width solid $border-color;
+			}
+
+			& > .sunday {
+				grid-area: sunday;
+				border-right: none;
+			}
 		}
 	}
 
-	aside {
-		width: 50px;
-		height: 100vh;
-		background: $primary-color;
+	aside,
+	main {
+		.tile {
+			background: white;
+			border: $border-width solid $border-color;
+		}
 	}
 }

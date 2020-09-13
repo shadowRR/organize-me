@@ -1,5 +1,5 @@
-<aside></aside>
-<main>
+<aside>
+	<div class="sidebar"></div>
 	<div class="todos p-2">
 		<div class="columns">
 			<div class="column col-9-col-ml-auto"></div>
@@ -23,8 +23,8 @@
 			</div>
 		<% else %>
 			<div phx-hook="Draggable" class="unassigned-todos draggable">
-				<%= for todo <- @todos do %>
-					<div class="tile tile-centered p-1">
+				<%= for todo <- get_unassigned_todos(@todos) do %>
+					<div data-id="<%= todo.id %>" class="tile tile-centered p-1">
 						<div class="tile-content">
 							<div class="tile-title text-ellipsis">
 								<%= todo.name %>
@@ -51,47 +51,44 @@
 			</button>
 		<% end %>
 	</div>
-	<div class="day monday p-2">
-		<h4 class="day-header">
-			Monday
-		</h4>
-		<div class="draggable" data-day="monday"></div>
-	</div>
-	<div class="day tuesday p-2">
-		<h4 class="day-header">
-			Tuesday
-		</h4>
-		<div class="draggable" data-day="tuesday"></div>
-	</div>
-	<div class="day wednesday p-2">
-		<h4 class="day-header">
-			Wednesday
-		</h4>
-		<div class="draggable" data-day="wednesday"></div>
-	</div>
-	<div class="day thursday p-2">
-		<h4 class="day-header">
-			Thursday
-		</h4>
-		<div class="draggable" data-day="thursday"></div>
-	</div>
-	<div class="day friday p-2">
-		<h4 class="day-header">
-			Friday
-		</h4>
-		<div class="draggable" data-day="friday"></div>
-	</div>
-	<div class="day saturday p-2">
-		<h4 class="day-header">
-			Saturday
-		</h4>
-		<div class="draggable" data-day="saturday"></div>
-	</div>
-	<div class="day sunday p-2">
-		<h4 class="day-header">
-			Sunday
-		</h4>
-		<div class="draggable" data-day="sunday"></div>
+</aside>
+<main>
+	<div class="controls"></div>
+	<div class="week">
+		<%= for day <- Date.range(Timex.beginning_of_week(@current_week), Timex.end_of_week(@current_week)) do %>
+			<div class="day <%= Timex.format!(day, "{WDfull}") |> String.downcase() %> p-2">
+				<h4 class="day-header">
+					<%= Timex.format!(day, "{WDfull}") %>
+					<span class="text-gray text-small ml-2">
+						<%= Timex.format!(day, "{D} {Mshort} {YYYY}") %>
+					</span>
+				</h4>
+				<div class="draggable" data-day="<%= day %>">
+					<%= for todo <- get_assigned_todos(@todos, day) do %>
+						<div data-id="<%= todo.id %>" class="tile tile-centered p-1">
+							<div class="tile-content">
+								<div class="tile-title text-ellipsis">
+									<%= todo.name %>
+								</div>
+								<div class="tile-subtitle">
+									<%= with category <- get_related_category(todo, @todos_categories) do %>
+										<div class="label label-rounded text-uppercase"
+												style="font-size: 0.5rem; color: white; background: <%= category.color %>;">
+											<%= category.name %>
+										</div>
+									<% end %>
+								</div>
+							</div>
+							<div class="tile-action">
+								<button phx-click="open-todo-modal" phx-value-todo="<%= todo.id %>" class="btn btn-sm btn-link">
+									<i class="icon icon-edit"></i>
+								</button>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
 	</div>
 
 	<%= if @open_todo_modal do %>

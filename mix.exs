@@ -46,6 +46,7 @@ defmodule OrganizeMe.MixProject do
       {:phx_gen_auth, "~> 0.4.0", only: [:dev], runtime: false},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
+      {:timex, "~> 3.6"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"}

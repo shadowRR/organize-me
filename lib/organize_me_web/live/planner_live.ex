@@ -23,8 +23,18 @@ defmodule OrganizeMeWeb.PlannerLive do
   end
 
   @impl true
+  def handle_params(params, _uri, socket) do
+    current_week =
+      unless is_nil(params["date"]),
+        do: Timex.parse!(params["date"], "{YYYY}-{M}-{D}"),
+        else: Date.utc_today()
+
+    {:noreply, assign(socket, current_week: current_week)}
+  end
+
+  @impl true
   def handle_event("open-todo-modal", %{"todo" => id}, socket) do
-    todo = Enum.find(socket.assigns.todos, & &1.id == String.to_integer(id))
+    todo = Enum.find(socket.assigns.todos, &(&1.id == String.to_integer(id)))
     {:noreply, assign(socket, open_todo_modal: true, current_todo: todo)}
   end
 
@@ -36,6 +46,13 @@ defmodule OrganizeMeWeb.PlannerLive do
   @impl true
   def handle_event("open-todo-categories-modal", _params, socket) do
     {:noreply, assign(socket, open_todo_categories_modal: true)}
+  end
+
+  @impl true
+  def handle_event("move-todo", %{"id" => id, "day" => day}, socket) do
+    idx = Enum.find_index(socket.assigns.todos, &(&1.id == String.to_integer(id)))
+    {:ok, todo} = Todos.update_todo(Enum.at(socket.assigns.todos, idx), %{assign_on: day})
+    {:noreply, assign(socket, todos: List.replace_at(socket.assigns.todos, idx, todo))}
   end
 
   @impl true
@@ -55,14 +72,14 @@ defmodule OrganizeMeWeb.PlannerLive do
 
   @impl true
   def handle_info({TodoCategoryFormLive, :todo_category_updated, category}, socket) do
-    idx = Enum.find_index(socket.assigns.todos_categories, & &1.id == category.id)
+    idx = Enum.find_index(socket.assigns.todos_categories, &(&1.id == category.id))
     todos_categories = List.replace_at(socket.assigns.todos_categories, idx, category)
     {:noreply, assign(socket, todos_categories: todos_categories)}
   end
 
   @impl true
   def handle_info({TodoCategoryFormLive, :todo_category_deleted, category}, socket) do
-    idx = Enum.find_index(socket.assigns.todos_categories, & &1.id == category.id)
+    idx = Enum.find_index(socket.assigns.todos_categories, &(&1.id == category.id))
     todos_categories = List.delete_at(socket.assigns.todos_categories, idx)
     {:noreply, assign(socket, todos_categories: todos_categories)}
   end
@@ -74,12 +91,22 @@ defmodule OrganizeMeWeb.PlannerLive do
 
   @impl true
   def handle_info({TodoFormLive, :todo_updated, todo}, socket) do
-    idx = Enum.find_index(socket.assigns.todos, & &1.id == todo.id)
+    idx = Enum.find_index(socket.assigns.todos, &(&1.id == todo.id))
     todos = List.replace_at(socket.assigns.todos, idx, todo)
     {:noreply, assign(socket, open_todo_modal: false, todos: todos)}
   end
 
   defp get_related_category(todo, categories) do
-    Enum.find(categories, & &1.id == todo.todo_category_id)
+    Enum.find(categories, &(&1.id == todo.todo_category_id))
+  end
+
+  defp get_unassigned_todos(todos) do
+    Enum.filter(todos, &is_nil(&1.assign_on))
+  end
+
+  defp get_assigned_todos(todos, day) do
+    todos
+    |> Enum.filter(&!is_nil(&1.assign_on))
+    |> Enum.filter(&Date.compare(&1.assign_on, day) == :eq)
   end
 end
