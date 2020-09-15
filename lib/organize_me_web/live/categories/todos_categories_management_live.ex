@@ -1,7 +1,7 @@
-defmodule OrganizeMeWeb.TodosCategoriesManagementLive do
+defmodule OrganizeMeWeb.Todos.TodosCategoriesManagementLive do
   use OrganizeMeWeb, :live_component
 
-  alias OrganizeMeWeb.TodoCategoryFormLive
+  alias OrganizeMeWeb.Todos.TodoCategoryFormLive
 
   @impl true
   def render(assigns) do

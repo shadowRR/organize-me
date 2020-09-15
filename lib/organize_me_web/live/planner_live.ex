@@ -2,9 +2,10 @@ defmodule OrganizeMeWeb.PlannerLive do
   use OrganizeMeWeb, :live_view
 
   alias OrganizeMe.Todos
-  alias OrganizeMeWeb.TodoFormLive
-  alias OrganizeMeWeb.TodoCategoryFormLive
-  alias OrganizeMeWeb.TodosCategoriesManagementLive
+  alias OrganizeMeWeb.Todos.TodoCardLive
+  alias OrganizeMeWeb.Todos.TodoFormLive
+  alias OrganizeMeWeb.Todos.TodoCategoryFormLive
+  alias OrganizeMeWeb.Todos.TodosCategoriesManagementLive
 
   @impl true
   def mount(_params, session, socket) do
@@ -94,10 +95,6 @@ defmodule OrganizeMeWeb.PlannerLive do
     idx = Enum.find_index(socket.assigns.todos, &(&1.id == todo.id))
     todos = List.replace_at(socket.assigns.todos, idx, todo)
     {:noreply, assign(socket, open_todo_modal: false, todos: todos)}
-  end
-
-  defp get_related_category(todo, categories) do
-    Enum.find(categories, &(&1.id == todo.todo_category_id))
   end
 
   defp get_unassigned_todos(todos) do

@@ -1,4 +1,4 @@
-defmodule OrganizeMeWeb.TodoFormLive do
+defmodule OrganizeMeWeb.Todos.TodoFormLive do
   use OrganizeMeWeb, :live_component
 
   alias OrganizeMe.Todos
