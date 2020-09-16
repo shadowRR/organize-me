@@ -38,7 +38,23 @@
 	</div>
 </aside>
 <main>
-	<div class="controls"></div>
+	<div class="controls mx-2">
+		<button phx-click="change-week" value="-1" class="btn btn-sm">
+			<i class="icon icon-arrow-left"></i>
+		</button>
+		<div class="text-small">
+			<span class="mx-2">
+				<%= Timex.beginning_of_week(@current_week) |> Timex.format!("{D} {Mshort}. {YYYY}") %>
+			</span>
+			-
+			<span class="mx-2">
+				<%= Timex.end_of_week(@current_week) |> Timex.format!("{D} {Mshort}. {YYYY}") %>
+			</span>
+		</div>
+		<button phx-click="change-week" value="1" class="btn btn-sm">
+			<i class="icon icon-arrow-right"></i>
+		</button>
+	</div>
 	<div class="week">
 		<%= for day <- Date.range(Timex.beginning_of_week(@current_week), Timex.end_of_week(@current_week)) do %>
 			<div class="day <%= Timex.format!(day, "{WDfull}") |> String.downcase() %> p-2">

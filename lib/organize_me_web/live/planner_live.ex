@@ -34,6 +34,13 @@ defmodule OrganizeMeWeb.PlannerLive do
   end
 
   @impl true
+  def handle_event("change-week", %{"value" => value}, socket) do
+    value = String.to_integer(value)
+    current_week = Timex.shift(socket.assigns.current_week, weeks: value)
+    {:noreply, assign(socket, current_week: current_week)}
+  end
+
+  @impl true
   def handle_event("open-todo-modal", %{"todo" => id}, socket) do
     todo = Enum.find(socket.assigns.todos, &(&1.id == String.to_integer(id)))
     {:noreply, assign(socket, open_todo_modal: true, current_todo: todo)}
