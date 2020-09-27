@@ -1,8 +1,9 @@
 defmodule OrganizeMe.AccountsTest do
   use OrganizeMe.DataCase
 
+  import OrganizeMe.Accounts.Fixtures
+
   alias OrganizeMe.Accounts
-  import OrganizeMe.AccountsFixtures
   alias OrganizeMe.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
@@ -11,8 +12,8 @@ defmodule OrganizeMe.AccountsTest do
     end
 
     test "returns the user if the email exists" do
-      %{id: id} = user = user_fixture()
-      assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
+      user = user_fixture()
+      assert %User{id: ^user.id} = Accounts.get_user_by_email(user.email)
     end
   end
 
@@ -27,10 +28,8 @@ defmodule OrganizeMe.AccountsTest do
     end
 
     test "returns the user if the email and password are valid" do
-      %{id: id} = user = user_fixture()
-
-      assert %User{id: ^id} =
-               Accounts.get_user_by_email_and_password(user.email, valid_user_password())
+      user = user_fixture()
+      assert %User{id: ^user.id} = Accounts.get_user_by_email_and_password(user.email, valid_user_password())
     end
   end
 
@@ -42,28 +41,23 @@ defmodule OrganizeMe.AccountsTest do
     end
 
     test "returns the user with the given id" do
-      %{id: id} = user = user_fixture()
-      assert %User{id: ^id} = Accounts.get_user!(user.id)
+      user = user_fixture()
+      assert %User{id: ^user.id} = Accounts.get_user!(user.id)
     end
   end
 
   describe "register_user/1" do
     test "requires email and password to be set" do
+      error = ["can't be blank"]
       {:error, changeset} = Accounts.register_user(%{})
-
-      assert %{
-               password: ["can't be blank"],
-               email: ["can't be blank"]
-             } = errors_on(changeset)
+      assert %{password: error, email: error} = errors_on(changeset)
     end
 
     test "validates email and password when given" do
+      email_error = ["must have the @ sign and no spaces"]
+      password_error = ["should be at least 12 character(s)"]
       {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "not valid"})
-
-      assert %{
-               email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
-             } = errors_on(changeset)
+      assert %{email: email_error, password: password_error} = errors_on(changeset)
     end
 
     test "validates maximum values for e-mail and password for security" do
@@ -78,7 +72,6 @@ defmodule OrganizeMe.AccountsTest do
       {:error, changeset} = Accounts.register_user(%{email: email})
       assert "has already been taken" in errors_on(changeset).email
 
-      # Now try with the upper cased e-mail too, to check that email case is ignored.
       {:error, changeset} = Accounts.register_user(%{email: String.upcase(email)})
       assert "has already been taken" in errors_on(changeset).email
     end
@@ -86,6 +79,7 @@ defmodule OrganizeMe.AccountsTest do
     test "registers users with a hashed password" do
       email = unique_user_email()
       {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password()})
+
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -101,7 +95,7 @@ defmodule OrganizeMe.AccountsTest do
   end
 
   describe "change_user_email/2" do
-    test "returns a user changeset" do
+    test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_email(%User{})
       assert changeset.required == [:email]
     end
@@ -118,40 +112,31 @@ defmodule OrganizeMe.AccountsTest do
     end
 
     test "validates email", %{user: user} do
-      {:error, changeset} =
-        Accounts.apply_user_email(user, valid_user_password(), %{email: "not valid"})
-
+      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{email: "not valid"})
       assert %{email: ["must have the @ sign and no spaces"]} = errors_on(changeset)
     end
 
     test "validates maximum value for e-mail for security", %{user: user} do
       too_long = String.duplicate("db", 100)
-
-      {:error, changeset} =
-        Accounts.apply_user_email(user, valid_user_password(), %{email: too_long})
-
+      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{email: too_long})
       assert "should be at most 160 character(s)" in errors_on(changeset).email
     end
 
     test "validates e-mail uniqueness", %{user: user} do
       %{email: email} = user_fixture()
-
-      {:error, changeset} =
-        Accounts.apply_user_email(user, valid_user_password(), %{email: email})
-
+      {:error, changeset} = Accounts.apply_user_email(user, valid_user_password(), %{email: email})
       assert "has already been taken" in errors_on(changeset).email
     end
 
     test "validates current password", %{user: user} do
-      {:error, changeset} =
-        Accounts.apply_user_email(user, "invalid", %{email: unique_user_email()})
-
+      {:error, changeset} = Accounts.apply_user_email(user, "invalid", %{email: unique_user_email()})
       assert %{current_password: ["is not valid"]} = errors_on(changeset)
     end
 
     test "applies the e-mail without persisting it", %{user: user} do
       email = unique_user_email()
       {:ok, user} = Accounts.apply_user_email(user, valid_user_password(), %{email: email})
+
       assert user.email == email
       assert Accounts.get_user!(user.id).email != email
     end
@@ -247,15 +232,13 @@ defmodule OrganizeMe.AccountsTest do
     test "validates maximum values for password for security", %{user: user} do
       too_long = String.duplicate("db", 100)
 
-      {:error, changeset} =
-        Accounts.update_user_password(user, valid_user_password(), %{password: too_long})
+      {:error, changeset} = Accounts.update_user_password(user, valid_user_password(), %{password: too_long})
 
       assert "should be at most 80 character(s)" in errors_on(changeset).password
     end
 
     test "validates current password", %{user: user} do
-      {:error, changeset} =
-        Accounts.update_user_password(user, "invalid", %{password: valid_user_password()})
+      {:error, changeset} = Accounts.update_user_password(user, "invalid", %{password: valid_user_password()})
 
       assert %{current_password: ["is not valid"]} = errors_on(changeset)
     end

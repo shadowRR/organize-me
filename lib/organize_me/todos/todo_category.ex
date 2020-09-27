@@ -15,7 +15,13 @@ defmodule OrganizeMe.Todos.TodoCategory do
   @doc false
   def changeset(todo_category, attrs) do
     todo_category
-    |> cast(attrs, [:name, :color])
-    |> validate_required([:name, :color])
+    |> cast(attrs, [
+      :name,
+      :color
+    ])
+    |> validate_required([
+      :name,
+      :color
+    ])
   end
 end

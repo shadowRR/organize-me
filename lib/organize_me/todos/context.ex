@@ -3,13 +3,15 @@ defmodule OrganizeMe.Todos do
   The Todos context.
   """
 
-  import Ecto.Query, warn: false
-  alias OrganizeMe.Repo
-
   alias Ecto.Changeset
+  alias OrganizeMe.Repo
   alias OrganizeMe.Accounts.User
   alias OrganizeMe.Todos.Todo
   alias OrganizeMe.Todos.TodoCategory
+
+  # ==================================
+  # TODO
+  # ==================================
 
   @doc """
   Returns the list of todos.
@@ -105,6 +107,10 @@ defmodule OrganizeMe.Todos do
   def change_todo(%Todo{} = todo, attrs \\ %{}) do
     Todo.changeset(todo, attrs)
   end
+
+  # ==================================
+  # TODO CATEGORY
+  # ==================================
 
   @doc """
   Returns the list of todos_categories.

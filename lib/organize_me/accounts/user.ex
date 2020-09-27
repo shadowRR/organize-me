@@ -1,5 +1,6 @@
 defmodule OrganizeMe.Accounts.User do
   use Ecto.Schema
+
   import Ecto.Changeset
 
   @derive {Inspect, except: [:password]}
@@ -12,19 +13,33 @@ defmodule OrganizeMe.Accounts.User do
     timestamps()
   end
 
-  @doc """
-  A user changeset for registration.
-
-  It is important to validate the length of both e-mail and password.
-  Otherwise databases may truncate the e-mail without warnings, which
-  could lead to unpredictable or insecure behaviour. Long passwords may
-  also be very expensive to hash for certain algorithms.
-  """
   def registration_changeset(user, attrs) do
     user
     |> cast(attrs, [:email, :password])
     |> validate_email()
     |> validate_password()
+  end
+
+  def email_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_email()
+    |> ensure_email_has_changed()
+  end
+
+  def password_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_confirmation(:password, message: "does not match password")
+    |> validate_password()
+  end
+
+  def confirm_changeset(user) do
+    now =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
+    change(user, confirmed_at: now)
   end
 
   defp validate_email(changeset) do
@@ -54,48 +69,23 @@ defmodule OrganizeMe.Accounts.User do
     |> delete_change(:password)
   end
 
-  @doc """
-  A user changeset for changing the e-mail.
-
-  It requires the e-mail to change otherwise an error is added.
-  """
-  def email_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:email])
-    |> validate_email()
-    |> case do
-      %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
-    end
+  defp ensure_email_has_changed(%{changes: %{email: _}} = changeset) do
+    changeset
   end
 
-  @doc """
-  A user changeset for changing the password.
-  """
-  def password_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
-    |> validate_password()
-  end
-
-  @doc """
-  Confirms the account by setting `confirmed_at`.
-  """
-  def confirm_changeset(user) do
-    now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    change(user, confirmed_at: now)
+  defp ensure_email_has_changed(changeset) do
+    add_error(changeset, :email, "did not change")
   end
 
   @doc """
   Verifies the password.
 
-  If there is no user or the user doesn't have a password, we call
-  `Pbkdf2.no_user_verify/0` to avoid timing attacks.
+  If there is no user or the user doesn't have a password, we
+  call `Pbkdf2.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%OrganizeMe.Accounts.User{hashed_password: hashed_password}, password)
-      when is_binary(hashed_password) and byte_size(password) > 0 do
-    Pbkdf2.verify_pass(password, hashed_password)
+  def valid_password?(%__MODULE__{hashed_password: h_pass}, pass)
+      when is_binary(h_pass) and byte_size(pass) > 0 do
+    Pbkdf2.verify_pass(pass, h_pass)
   end
 
   def valid_password?(_, _) do
@@ -104,13 +94,11 @@ defmodule OrganizeMe.Accounts.User do
   end
 
   @doc """
-  Validates the current password otherwise adds an error to the changeset.
+  Validates the current password.
   """
   def validate_current_password(changeset, password) do
-    if valid_password?(changeset.data, password) do
-      changeset
-    else
-      add_error(changeset, :current_password, "is not valid")
-    end
+    if valid_password?(changeset.data, password),
+      do: changeset,
+      else: add_error(changeset, :current_password, "is not valid")
   end
 end

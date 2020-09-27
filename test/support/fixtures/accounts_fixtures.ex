@@ -1,4 +1,4 @@
-defmodule OrganizeMe.AccountsFixtures do
+defmodule OrganizeMe.Accounts.Fixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities via the `OrganizeMe.Accounts` context.
