@@ -4,7 +4,8 @@ defmodule OrganizeMe.AccountsTest do
   import OrganizeMe.Accounts.Fixtures
 
   alias OrganizeMe.Accounts
-  alias OrganizeMe.Accounts.{User, UserToken}
+  alias OrganizeMe.Accounts.User
+  alias OrganizeMe.Accounts.UserToken
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
